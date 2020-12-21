@@ -4,13 +4,13 @@ const request = indexedDB.open('budget-tracker', 1);
 
 request.onupgradeneeded = function(event) {
     const db = event.target.result;
-    db.createObjectStore('new_budget', { autoIncrement: true });
+    db.createObjectStore('new_transaction', { autoIncrement: true });
 };
 
 request.onsuccess = function(event) {
     db = event.target.result;
-    if (navigator.online) {
-        uploadBudget();
+    if (navigator.onLine) {
+        uploadTransaction(db);
     }
 };
 
@@ -19,15 +19,15 @@ request.onerror = function(event) {
 };
 
 function saveRecord(record) {
-    const transaction = db.transaction(['new_budget'], 'readwrite');
-    const budgetObjectStore = transaction.objectStore('new_budget');
-    budgetObjectStore.add(record);
+    const transaction = db.transaction(['new_transaction'], 'readwrite');
+    const transactionObjectStore = transaction.objectStore('new_transaction');
+    transactionObjectStore.add(record);
 };
 
-function uploadBudget() {
-    const transaction = db.transaction(['new_budget'], 'readwrite');
-    const budgetObjectStore = transaction.objectStore('new_budget');
-    const getAll = budgetObjectStore.getAll();
+function uploadTransaction() {
+    const transaction = db.transaction(['new_transaction'], 'readwrite');
+    const transactionObjectStore = transaction.objectStore('new_transaction');
+    const getAll = transactionObjectStore.getAll();
     getAll.onsuccess = function() {
         if (getAll.result.length > 0) {
             fetch('/api/transaction', {
@@ -43,10 +43,10 @@ function uploadBudget() {
                 if (ServerResponse.message) {
                     throw new Error(ServerResponse);
                 }
-                const transaction = db.transaction(['new_budget'], 'readwrite');
-                const budgetObjectStore = transaction.objectStore('new_budget');
-                budgetObjectStore.clear();
-                alert('All saved changes to transactions saved')
+                const transaction = db.transaction(['new_transaction'], 'readwrite');
+                const transactionObjectStore = transaction.objectStore('new_transaction');
+                transactionObjectStore.clear();
+                alert('All transactions have been uploaded')
             })
             .catch(err => {
                 console.log(err);
@@ -55,4 +55,4 @@ function uploadBudget() {
     };
 };
 
-window.addEventListener('online', uploadBudget);
+window.addEventListener('online', uploadTransaction);
