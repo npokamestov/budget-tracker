@@ -1,0 +1,20 @@
+{
+    "name": "Budget-Tracker",
+    "short_name": "Budget_Tacker",
+    "theme_color": "#ffffff",
+    "background_color": "#01579b",
+    "start_url": "../index.html",
+    "display": "standalone",
+    "icons": [
+        {
+            "src": "",
+            "sizes": "",
+            "type": ""
+        },
+        {
+            "src": "",
+            "sizes": "",
+            "type": ""
+        }
+    ]
+}
